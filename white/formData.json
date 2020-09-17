@@ -9,10 +9,24 @@
     },
     {
       "id": 2,
-      "name": "jonathan moguillansky",
-      "mail": "123123",
-      "phone": "3",
-      "address": "haasis 7 apt. 19"
+      "name": "mr.T",
+      "mail": "info@kodo.press",
+      "phone": "0500",
+      "address": "1"
+    },
+    {
+      "id": 3,
+      "name": "12",
+      "mail": "111111",
+      "phone": "12",
+      "address": "1"
+    },
+    {
+      "id": 4,
+      "name": "or",
+      "mail": "oooooo",
+      "phone": "or",
+      "address": "o"
     }
   ]
 }

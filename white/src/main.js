@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 
-const API = "http://localhost:3002/contacts";
+const API = "http://localhost:3001/contacts";
 
 class Main extends Component {
   constructor(props) {
@@ -29,16 +29,17 @@ class Main extends Component {
   }
 
   redraw = () => {
-    // this.setState({ contacts: contacts });
-    let contacts = this.state.contacts;
-    this.setState({ contacts });
-    if(this.state.valid){ 
-    fetch(API)
-    .then((response) => response.json())
-    .then((contacts) => this.setState({  contacts }));
-    }
+    let valid = this.state.valid;
+    if (valid) {
+      this.fetchContacts();
+      setTimeout(() => {
+        console.log(this.state.contacts);
+        fetch(API)
+          .then((response) => response.json())
+          .then((contacts) => this.setState({ contacts: contacts }));
+      }, 1000);
       this.setState({ valid: false });
-
+    }
   };
   addContact = () => {
     let name = this.state.name;
@@ -47,15 +48,14 @@ class Main extends Component {
     let address = this.state.address;
     let id = this.state.id;
     if (!name || !mail || !phone || !address) {
-      alert("one of the fields is missing");
+      alert("אחד מהשדות חסרים, בדקו שנית");
       return false;
     }
-    if(mail.length< 6){
-        return alert("mail is too short" )
+    if (mail.length < 6) {
+      return alert('כתובת הדוא"ל קצרה מדי');
     }
-    else {
-      this.setState({ valid: true });
-    }
+    this.state.valid = true;
+    this.setState({ valid: true });
     const senData = `{"id":${id},"name":"${name}","mail":"${mail}","phone":"${phone}","address":"${address}"}`;
     console.log(senData);
 
@@ -69,7 +69,7 @@ class Main extends Component {
     };
     fetch(API, options)
       .then((response) => response.json())
-      .then(() => alert(name + " your info has been added, thanks. "))
+      .then(() => alert(name + " הרשומה עודכנה, תודה "))
       .catch((err) => alert(err.message));
     this.redraw();
   };
@@ -82,7 +82,9 @@ class Main extends Component {
   sortByName = () => {
     let ordered = this.state.ordered;
     let contacts = this.state.contacts;
-    if(!contacts){return false}
+    if (!contacts) {
+      return false;
+    }
     if (!ordered) {
       contacts.sort(function (a, b) {
         a = a.name.toLowerCase();
