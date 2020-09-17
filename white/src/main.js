@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, Table } from "react-bootstrap";
 
-const API = "http://localhost:3000/contacts";
+const API = "http://localhost:3002/contacts";
 
 class Main extends Component {
   constructor(props) {
@@ -18,20 +18,27 @@ class Main extends Component {
     };
   }
 
-  componentDidMount() {
-    this.fetchContacts();
-  }
-
   fetchContacts = () => {
     fetch(API)
       .then((response) => response.json())
       .then((contacts) => this.setState({ contacts }));
   };
 
+  componentDidMount() {
+    this.fetchContacts();
+  }
+
   redraw = () => {
-    this.setState({ valid: false });
+    // this.setState({ contacts: contacts });
     let contacts = this.state.contacts;
-    this.setState({ contacts: contacts });
+    this.setState({ contacts });
+    if(this.state.valid){ 
+    fetch(API)
+    .then((response) => response.json())
+    .then((contacts) => this.setState({  contacts }));
+    }
+      this.setState({ valid: false });
+
   };
   addContact = () => {
     let name = this.state.name;
@@ -62,12 +69,12 @@ class Main extends Component {
     };
     fetch(API, options)
       .then((response) => response.json())
-      .then((contacts) => alert(name + " your info has been added, thanks. "))
+      .then(() => alert(name + " your info has been added, thanks. "))
       .catch((err) => alert(err.message));
     this.redraw();
   };
 
-  myChangeHandler = (event) => {
+  setFormParams = (event) => {
     let nam = event.target.name;
     let val = event.target.value;
     this.setState({ [nam]: val });
@@ -75,6 +82,7 @@ class Main extends Component {
   sortByName = () => {
     let ordered = this.state.ordered;
     let contacts = this.state.contacts;
+    if(!contacts){return false}
     if (!ordered) {
       contacts.sort(function (a, b) {
         a = a.name.toLowerCase();
@@ -124,7 +132,7 @@ class Main extends Component {
               placeholder="השם שלכם"
               required
               name="name"
-              onChange={this.myChangeHandler}
+              onChange={this.setFormParams}
             />
           </Form.Group>
           <Form.Group controlId="formBasicPhone">
@@ -134,7 +142,7 @@ class Main extends Component {
               placeholder="הטלפון שלכם "
               required
               name="phone"
-              onChange={this.myChangeHandler}
+              onChange={this.setFormParams}
             />
           </Form.Group>
           <Form.Group controlId="formBasicEmail">
@@ -145,7 +153,7 @@ class Main extends Component {
               name="mail"
               required
               pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/"
-              onChange={this.myChangeHandler}
+              onChange={this.setFormParams}
             />
             <Form.Text className="text-muted">לעולם לא נשתף אותה</Form.Text>
           </Form.Group>
@@ -156,7 +164,7 @@ class Main extends Component {
               placeholder="כתובת"
               required
               name="address"
-              onChange={this.myChangeHandler}
+              onChange={this.setFormParams}
             />
           </Form.Group>
 
